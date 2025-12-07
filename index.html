@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tập đoàn Tổ 2 - 11 THÀNH VIÊN (DECOR)</title>
+    
+    <style>
+        /* --- 1. BIẾN MÀU SẮC --- */
+        :root {
+            --bg-color: #f0f0f5; 
+            --card-color: #ffffff;
+            --accent-color: #007bff; /* Màu xanh dương hiện đại */
+            --text-primary: #333333;
+            --text-secondary: #6c757d;
+            --shadow-subtle: 0 6px 15px rgba(0, 0, 0, 0.12);
+            --gradient-card: linear-gradient(145deg, #ffffff, #f0f0f5); /* Decor Card */
+        }
+
+        /* --- 2. CSS CHUNG VÀ BỐ CỤC --- */
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+            padding: 40px 20px;
+            /* Thêm background pattern nhẹ nhàng cho decor */
+            background-image: radial-gradient(#d3d3d3 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 10px 30px;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        /* --- 3. GRID LIST CONTAINERS (Tối ưu căn giữa) --- */
+        .grid-container {
+            width: 90%;
+            max-width: 1200px; 
+            display: grid;
+            /* Thiết lập grid linh hoạt, minmax 220px để cân bằng 4 cột đẹp hơn */
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 25px; /* Tăng khoảng cách */
+            padding: 10px;
+            justify-content: center; /* Căn giữa các item trong grid (tùy thuộc browser) */
+        }
+
+        /* --- 4. CARD THÀNH VIÊN (CARD NHỎ - DECOR MẠNH) --- */
+        .member-card {
+            background: var(--gradient-card); /* Áp dụng gradient */
+            border-radius: 15px; /* Bo góc mềm mại hơn */
+            overflow: hidden;
+            box-shadow: var(--shadow-subtle);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            height: 280px; /* Tăng chiều cao */
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .member-card:hover {
+            transform: translateY(-8px); /* Nhảy lên mạnh hơn */
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+            background: #fff;
+        }
+
+        /* Ảnh nền (Background Image) */
+        .card-image {
+            height: 70%; /* Giảm tỉ lệ ảnh để footer rộng hơn */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            /* Thêm overlay mờ để tên dễ đọc hơn */
+            filter: brightness(0.95);
+            transition: filter 0.3s;
+        }
+
+        .member-card:hover .card-image {
+             filter: brightness(1);
+        }
+
+        /* Tên thành viên (Footer Card) */
+        .card-name {
+            height: 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--text-primary);
+            background-color: #fff; /* Nền trắng rõ ràng */
+        }
+        
+        .card-name small {
+            font-size: 0.8em;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+
+        /* --- 5. KHUNG CHI TIẾT HIỂN THỊ (Sau khi click) --- */
+        .detail-view {
+            width: 90%;
+            max-width: 800px; /* Tăng kích thước Detail View */
+            padding: 40px;
+            background: var(--card-color);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            display: none; 
+            flex-direction: column;
+            gap: 25px;
+            border-left: 5px solid var(--accent-color); /* Decor bên hông */
+        }
+        
+        .detail-view.active {
+            display: flex;
+        }
+        
+        .detail-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .detail-header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-info h2 {
+            margin: 0 0 8px 0;
+            color: var(--accent-color);
+            font-size: 2em;
+        }
+        .detail-info p {
+            margin: 0 0 4px 0;
+            color: var(--text-secondary);
+        }
+
+        /* Styling cho phần nội dung chi tiết */
+        .detail-core, .detail-hobbies {
+            padding: 10px 0;
+        }
+        .detail-core h3, .detail-hobbies h3 {
+            font-size: 1.1em;
+            color: var(--text-primary);
+            border-bottom: 2px solid #f0f0f5;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .detail-hobbies ul {
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px 30px;
+        }
+        .detail-hobbies ul li {
+            position: relative;
+            padding-left: 15px;
+            color: var(--text-secondary);
+            font-size: 0.95em;
+        }
+        .detail-hobbies ul li::before {
+            content: '✓'; /* Thay bullet bằng check mark */
+            color: var(--accent-color);
+            font-size: 1em;
+            position: absolute;
+            left: 0;
+            top: 0;
+            line-height: 1.2;
+        }
+        
+        /* Nút Quay lại */
+        .back-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px; /* Nút tròn hơn */
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            font-weight: 600;
+        }
+        .back-button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+        
+        .grid-container.hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1 id="main-title"> Anh Em Tổ 2 </h1>
+    
+    <div id="member-grid" class="grid-container">
+        </div>
+    
+    <div id="detail-view" class="detail-view">
+        <button id="back-button" class="back-button">← Quay lại Danh sách</button>
+        <div id="detail-content">
+            </div>
+    </div>
+
+
+    <script>
+        // --- DỮ LIỆU 11 THÀNH VIÊN ---
+        const DEFAULT_SCHOOL = "THPT Số 1 Trần Cao Vân"; 
+        const DEFAULT_CLASS = "12A8"; 
+        
+        const membersData = {
+            hieu: { name: "Phan Trung Hiếu", alias: "", school: DEFAULT_SCHOOL, class: DEFAULT_CLASS, dob: "28/06/2008", zodiac: "Cự Giải", hobbies: ["Nghe nhạc lofi", "Đọc truyện tranh/tiểu thuyết", "Chơi game chiến thuật", "Chơi bóng chuyền"], image: "1.jpg", facebook: "trung.hieu.28062008", instagram: "hieu_neko" },
+            han: { name: "Nguyễn Thị Ngọc Hân", alias: "", school: DEFAULT_SCHOOL, class: DEFAULT_CLASS, dob: "14/04/2008", zodiac: "Bạch Dương", hobbies: ["Xem phim", "Đi du lịch"], image: "2.jpg", facebook: "14.thangs04", instagram: "ngoc.han.ig" },
+            gia_huy: { name: "Dương Gia Huy", alias: "", school: DEFAULT_SCHOOL, class: DEFAULT_CLASS, dob: "02/12/2008", zodiac: "Nhân Mã", hobbies: ["Chơi game", "Chơi thể thao"], image: "3.jpg", facebook: "m.dwhuy", instagram: "duong.gia.huy.ig" },
+            tuyen: { name: "Nguyễn Thanh Tuyền", alias: "", school: DEFAULT_SCHOOL, class: DEFAULT_CLASS, dob: "16/09/2008", zodiac: "Xử Nữ", hobbies: ["Ăn ngon", "Đi du lịch", "Mua sắm"], image: "4.jpg", facebook: "thanh.tuyen.260469", instagram: "thanh.tuyen.ig" },
+            an: { name: "Lê Xuân An", alias: "", school: DEFAULT_SCHOOL, class: DEFAULT_CLASS, dob: "05/01/2008", zodiac: "Ma Kết", hobbies: ["Chơi thể thao", "Nghe nhạc"], image: "5.jpg", facebook: "xuan.an.752682", instagram: "xuan.an.ig" },
+            nghi: { name: "Nguyễn Phú Bối Nghi", alias: "", school: DEFAULT_SCHOOL, class: DEFAULT_CLASS, dob: "03/10/2008", zodiac: "Thiên Bình", hobbies: ["Thể thao", "Nghe nhạc"], image: "6.jpg", facebook: "profile.php?id=61579766007267", instagram: "boi.nghi.ig" },
+            thach: { name: "Nguyễn Bửu Thạch", alias: "", school: DEFAULT_SCHOOL, class: DEFAULT_CLASS, dob: "24/01/2008", zodiac: "Bảo Bình", hobbies: ["Đánh đàn", "Lướt Toptop", "Du lịch"], image: "7.jpg", facebook: "buuthach08", instagram: "buu.thach.ig" },
+            dat: { name: "Phan Thành Đạt", alias: "", school: DEFAULT_SCHOOL, class: DEFAULT_CLASS, dob: "09/01/2008", zodiac: "Ma Kết", hobbies: ["Chơi game", "Chơi thể thao", "Ca hát", "Nghe nhạc"], image: "8.jpg", facebook: "thanh.at.275841", instagram: "thanh.dat.ig" },
+            anh_thu: { name: "Nguyễn Đoàn Anh Thư", alias: "", school: DEFAULT_SCHOOL, class: DEFAULT_CLASS, dob: "29/07/2008", zodiac: "Sư Tử", hobbies: ["Ngủ", "Đi du lịch"], image: "9.jpg", facebook: "ngdoanathu1252", instagram: "anh.thu.ig" },
+            kha_ly: { name: "Trần Kha Ly", alias: "", school: DEFAULT_SCHOOL, class: DEFAULT_CLASS, dob: "01/11/2008", zodiac: "Bọ Cạp", hobbies: ["Xem phim", "Đi du lịch", "Ăn uống"], image: "10.jpg", facebook: "kha.ly.249766", instagram: "kha.ly.ig" },
+            trung_hieu: { 
+                name: "Nguyễn Trung Hiếu", alias: "",
+                school: DEFAULT_SCHOOL, 
+                class: DEFAULT_CLASS, 
+                dob: "26/01/2008", 
+                zodiac: "Bảo Bình", 
+                hobbies: ["Ăn uống", "Chơi game", "Sưu tầm nước hoa"], 
+                image: "11.jpg", 
+                facebook: "trung.hieu.fb", 
+                instagram: "trung.hieu.ig" 
+            },
+        };
+
+        const gridContainer = document.getElementById('member-grid');
+        const detailView = document.getElementById('detail-view');
+        const detailContent = document.getElementById('detail-content');
+        const mainTitle = document.getElementById('main-title');
+        const backButton = document.getElementById('back-button');
+
+        // --- 1. HÀM TẠO CARD NHỎ (GRID) ---
+        function createMemberCard(key, data) {
+            const card = document.createElement('div');
+            card.className = 'member-card';
+            card.setAttribute('data-member-key', key);
+            
+            // Thiết lập ảnh nền
+            const imageDiv = document.createElement('div');
+            imageDiv.className = 'card-image';
+            imageDiv.style.backgroundImage = `url(${data.image})`; 
+            
+            // Thêm tên
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'card-name';
+            nameDiv.innerHTML = `${data.name} ${data.alias ? `(<small>${data.alias}</small>)` : ''}`;
+            
+            card.appendChild(imageDiv);
+            card.appendChild(nameDiv);
+            
+            card.addEventListener('click', () => showDetailView(key));
+            
+            return card;
+        }
+
+        // --- 2. HÀM TẠO NỘI DUNG CHI TIẾT (DETAIL VIEW) ---
+        function createDetailContentHTML(data) {
+            const hobbiesList = data.hobbies.map(hobby => `<li>${hobby}</li>`).join('');
+            
+            const fbLink = data.facebook ? `<a href="${'https://facebook.com/' + data.facebook}" target="_blank" style="background: #3b5998; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; margin-left: 10px; font-weight: 500;">Facebook</a>` : '';
+            const instaLink = data.instagram ? `<a href="${'https://instagram.com/' + data.instagram}" target="_blank" style="background: #e1306c; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; margin-left: 10px; font-weight: 500;">Instagram</a>` : '';
+            
+            const socialLinks = fbLink || instaLink ? `
+                <div style="margin-top: 25px; padding-top: 15px; border-top: 1px dashed #ddd; text-align: right;">
+                    ${fbLink}
+                    ${instaLink}
+                </div>
+            ` : '';
+            
+            return `
+                <div class="detail-header">
+                    <img src="${data.image}" alt="${data.name}">
+                    <div class="detail-info">
+                        <h2>${data.name} ${data.alias ? `(${data.alias})` : ''}</h2>
+                        <p>Trường: <strong>${data.school}</strong></p>
+                        <p>Lớp: <strong>${data.class}</strong></p>
+                        <p>Ngày sinh: <strong>${data.dob}</strong></p>
+                    </div>
+                </div>
+
+                <div class="detail-core">
+                    <h3>THÔNG TIN CƠ BẢN</h3>
+                    <p>Cung Hoàng đạo: <strong>${data.zodiac}</strong></p>
+                </div>
+                
+                <div class="detail-hobbies">
+                    <h3>SỞ THÍCH CÁ NHÂN</h3>
+                    <ul>
+                        ${hobbiesList}
+                    </ul>
+                </div>
+                ${socialLinks}
+            `;
+        }
+        
+        // --- 3. HÀM HIỂN THỊ CHI TIẾT ---
+        function showDetailView(key) {
+            const data = membersData[key];
+            if (!data) return;
+
+            gridContainer.classList.add('hidden');
+            detailView.classList.add('active');
+            
+            mainTitle.textContent = data.name.toUpperCase();
+            
+            detailContent.innerHTML = createDetailContentHTML(data);
+        }
+
+        // --- 4. HÀM QUAY LẠI DANH SÁCH ---
+        function showGridView() {
+            gridContainer.classList.remove('hidden');
+            detailView.classList.remove('active');
+            
+            mainTitle.textContent = "DANH SÁCH GIỚI THIỆU";
+        }
+        
+        // --- 5. KHỞI TẠO VÀ LẮNG NGHE SỰ KIỆN ---
+        function initialize() {
+            // Lấy danh sách key và trộn (shuffle) ngẫu nhiên để bố cục đẹp hơn
+            let memberKeys = Object.keys(membersData);
+            
+            // Hàm shuffle (để bố cục 11 item nhìn cân đối hơn)
+            for (let i = memberKeys.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [memberKeys[i], memberKeys[j]] = [memberKeys[j], memberKeys[i]];
+            }
+
+            // TẠO CARD CHO TẤT CẢ 11 THÀNH VIÊN THEO THỨ TỰ MỚI
+            memberKeys.forEach(key => {
+                gridContainer.appendChild(createMemberCard(key, membersData[key]));
+            });
+            
+            backButton.addEventListener('click', showGridView);
+        }
+
+        initialize();
+    </script>
+</body>
+</html>
